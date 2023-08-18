@@ -1,0 +1,191 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  email            String            @unique
+  password         String
+  name             String?
+  cardToken        Int?
+  billingaddress   Int?
+  birthDate        DateTime
+  session          UserSession?
+  creditcard       CreditCard[]
+  billingaddresses BillingAddress[]
+  retiredpasswords RetiredPassword[]
+  cart             CartItem[]
+  wishlist         WishListItem[]
+  orders           Order[]
+  createdAt        DateTime          @default(now())
+}
+
+model RetiredPassword {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  password  String
+  retiredAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model BillingAddress {
+  id          Int      @id @default(autoincrement())
+  addresstype String
+  country     String
+  state       String
+  city        String
+  zipcode     String
+  street      String
+  number      String
+  complemento String
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model UserSession {
+  id        Int            @id @default(autoincrement())
+  userId    Int            @unique
+  user      User           @relation(fields: [userId], references: [id])
+  token     String
+  attempts  LoginAttempt[]
+  createdAt DateTime       @default(now())
+}
+
+model LoginAttempt {
+  id         Int         @id @default(autoincrement())
+  tokenId    Int
+  token      UserSession @relation(fields: [tokenId], references: [id])
+  status     String
+  executedAt DateTime
+  createdAt  DateTime    @default(now())
+}
+
+model CreditCard {
+  id             Int          @id @default(autoincrement())
+  PAN            String
+  expirationdate DateTime
+  cardholdername String
+  brand          String
+  user           User         @relation(fields: [userId], references: [id])
+  userId         Int
+  credittoken    TokenCredit?
+  createdAt      DateTime     @default(now())
+}
+
+model TokenCredit {
+  id        Int               @id @default(autoincrement())
+  token     String
+  credit    CreditCard        @relation(fields: [creditId], references: [id])
+  creditId  Int               @unique
+  uses      TokenCreditUses[]
+  createdAt DateTime          @default(now())
+}
+
+model TokenCreditUses {
+  id            Int         @id @default(autoincrement())
+  operationtype String
+  executedAt    DateTime
+  token         TokenCredit @relation(fields: [tokenId], references: [id])
+  tokenId       Int
+  status        String
+  createdAt     DateTime    @default(now())
+}
+
+// Product
+
+model Product {
+  id             Int               @id @default(autoincrement())
+  name           String
+  sku            String
+  description    String
+  price          Float
+  previewimage   String
+  image1         String
+  image2         String?
+  image3         String?
+  image4         String?
+  categoryId     Int
+  stock          Int
+  categories     ProductCategory[]
+  pricinghistory PricingHistory[]
+  wishlistitems  WishListItem[]
+  cartitems      CartItem[]
+  orders         OrderItem[]
+  createdAt      DateTime          @default(now())
+}
+
+model ProductCategory {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  products    Product[]
+  createdAt   DateTime  @default(now())
+}
+
+model PricingHistory {
+  id        Int      @id @default(autoincrement())
+  price     Float
+  startedAt DateTime
+  endedAt   DateTime
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  quantity  Int
+  user      User     @relation(fields: [userId], references: [id])
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model WishListItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+// Order
+
+model Order {
+  id         Int          @id @default(autoincrement())
+  userId     Int
+  user       User         @relation(fields: [userId], references: [id])
+  status     OrderStatus?
+  orderitems OrderItem[]
+  createdAt  DateTime     @default(now())
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  quantity  Int
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model OrderStatus {
+  id        Int      @id @default(autoincrement())
+  orderId   Int      @unique
+  order     Order    @relation(fields: [orderId], references: [id])
+  status    String
+  createdAt DateTime @default(now())
+}
