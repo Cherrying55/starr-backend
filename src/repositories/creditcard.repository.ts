@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export function getCreditCardbyUserId(userId: number) {
+  function getCreditCardbyUserId(userId: number) {
   return prisma.creditCard.findFirst({
     where: {
       userId,
@@ -10,13 +10,13 @@ export function getCreditCardbyUserId(userId: number) {
   });
 }
 
-export function createCreditCard(data: any) {
+  function createCreditCard(data: any) {
   return prisma.creditCard.create({
     data,
   });
 }
 
-export function createCreditToken(creditId: number, token: string) {
+  function createCreditToken(creditId: number, token: string) {
   const upsertSession = prisma.tokenCredit.upsert({
     where: {
       creditId,
@@ -32,7 +32,7 @@ export function createCreditToken(creditId: number, token: string) {
   return upsertSession;
 }
 
-export function createTokenCreditUse(tokenId: number, operationtype: string, executedAt: string, status: string) {
+  function createTokenCreditUse(tokenId: number, operationtype: string, executedAt: string, status: string) {
   const created = prisma.tokenCreditUses.create({
     data: {
       tokenId,
@@ -44,7 +44,7 @@ export function createTokenCreditUse(tokenId: number, operationtype: string, exe
   return created;
 }
 
-export function updateCreditCard(creditId: number, data: any) {
+  function updateCreditCard(creditId: number, data: any) {
   const updated = prisma.creditCard.update({
     where: {
       id: creditId,
@@ -54,7 +54,7 @@ export function updateCreditCard(creditId: number, data: any) {
   return updated;
 }
 
-export function deleteCreditCard(creditId: number) {
+  function deleteCreditCard(creditId: number) {
   const deleted = prisma.creditCard.delete({
     where: {
       id: creditId,
@@ -63,11 +63,21 @@ export function deleteCreditCard(creditId: number) {
   return deleted;
 }
 
-export function deleteTokenCredit(creditId: number) {
+  function deleteTokenCredit(creditId: number) {
   const deleted = prisma.tokenCredit.delete({
     where: {
       creditId,
     },
   });
   return deleted;
+}
+
+export const creditRepository = {
+  getCreditCardbyUserId,
+  createCreditCard,
+  createCreditToken,
+  createTokenCreditUse,
+  deleteCreditCard,
+  deleteTokenCredit,
+  updateCreditCard
 }

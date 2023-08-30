@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export function getOrdersbyUserId(userId: number) {
+function getOrdersbyUserId(userId: number) {
   return prisma.order.findMany({
     where: {
       userId,
@@ -10,7 +10,7 @@ export function getOrdersbyUserId(userId: number) {
   });
 }
 
-export function getOrderItemsbyOrderId(orderId: number) {
+function getOrderItemsbyOrderId(orderId: number) {
   return prisma.orderItem.findMany({
     where: {
       orderId,
@@ -18,7 +18,7 @@ export function getOrderItemsbyOrderId(orderId: number) {
   });
 }
 
-export function createOrder(userId: number) {
+  function createOrder(userId: number) {
   const created = prisma.order.create({
     data: {
       userId,
@@ -27,7 +27,7 @@ export function createOrder(userId: number) {
   return created;
 }
 
-export function createOrderItem(orderId: number, quantity: number, productId: number) {
+  function createOrderItem(orderId: number, quantity: number, productId: number) {
   const created = prisma.orderItem.create({
     data: {
       orderId,
@@ -38,7 +38,7 @@ export function createOrderItem(orderId: number, quantity: number, productId: nu
   return created;
 }
 
-export function createOrderStatus(orderId: number, status: string) {
+  function createOrderStatus(orderId: number, status: string) {
   const created = prisma.orderStatus.create({
     data: {
       orderId,
@@ -48,7 +48,7 @@ export function createOrderStatus(orderId: number, status: string) {
   return created;
 }
 
-export function updateOrderStatus(orderId: number, status: string) {
+  function updateOrderStatus(orderId: number, status: string) {
   const updated = prisma.orderStatus.update({
     where: {
       orderId,
@@ -60,28 +60,11 @@ export function updateOrderStatus(orderId: number, status: string) {
   return updated;
 }
 
-export function deleteOrder(orderId: number) {
-  const deleted = prisma.order.delete({
-    where: {
-      id: orderId,
-    },
-  });
-  return deleted;
-}
-
-export function deleteAllOrderItems(orderId: number) {
-  const deleted = prisma.orderItem.deleteMany({
-    where: {
-      orderId,
-    },
-  });
-  return deleted;
-}
-
-export function deleteOrderStatus(orderId: number) {
-  const deleted = prisma.orderStatus.delete({
-    where: {
-      orderId,
-    },
-  });
+export const orderRepository = {
+  getOrdersbyUserId,
+  getOrderItemsbyOrderId,
+  createOrder,
+  createOrderItem,
+  createOrderStatus,
+  updateOrderStatus
 }

@@ -2,11 +2,11 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export function getAllProducts() {
+function getAllProducts() {
   return prisma.product.findMany();
 }
 
-export function getProductByCategoryId(categoryId: number) {
+function getProductByCategoryId(categoryId: number) {
   return prisma.product.findMany({
     where: {
       categories: {
@@ -18,7 +18,7 @@ export function getProductByCategoryId(categoryId: number) {
   });
 }
 
-export function updateProductStock(productId: number, stock: number) {
+ function updateProductStock(productId: number, stock: number) {
   const updated = prisma.product.update({
     where: {
       id: productId,
@@ -28,4 +28,10 @@ export function updateProductStock(productId: number, stock: number) {
     },
   });
   return updated;
+}
+
+export const productrepository = {
+  getAllProducts,
+  getProductByCategoryId,
+  updateProductStock
 }

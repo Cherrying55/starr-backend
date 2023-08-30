@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export function getWishList(userId: number) {
+function getWishList(userId: number) {
   return prisma.wishListItem.findMany({
     where: {
       userId,
@@ -10,17 +10,17 @@ export function getWishList(userId: number) {
   });
 }
 
-export function postWishList(userId: number, productId: number, quantity: number) {
+function postWishList(userId: number, productId: number) {
   const created = prisma.wishListItem.create({
     data: {
       userId,
-      productId,
+      productId
     },
   });
   return created;
 }
 
-export function deleteWishList(userId: number, productId: number, quantity: number) {
+function deleteWishList(userId: number, productId: number) {
   const deleted = prisma.wishListItem.deleteMany({
     where: {
       userId,
@@ -30,7 +30,7 @@ export function deleteWishList(userId: number, productId: number, quantity: numb
   return deleted;
 }
 
-export function getWishListByProductId(userId: number, productId: number) {
+function getWishListByProductId(userId: number, productId: number) {
   //checking if there is already a wish item for the given product
   return prisma.wishListItem.findMany({
     where: {
@@ -38,4 +38,11 @@ export function getWishListByProductId(userId: number, productId: number) {
       productId,
     },
   });
+}
+
+export const wishlistrepository = {
+  getWishList,
+  postWishList,
+  deleteWishList,
+  getWishListByProductId
 }

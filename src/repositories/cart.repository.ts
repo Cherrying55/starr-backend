@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export function getCart(userId: number) {
+  function getCart(userId: number) {
   return prisma.cartItem.findMany({
     where: {
       userId,
@@ -10,7 +10,7 @@ export function getCart(userId: number) {
   });
 }
 
-export function postCartItem(userId: number, productId: number, quantity: number) {
+  function postCartItem(userId: number, productId: number, quantity: number) {
   return prisma.cartItem.create({
     data: {
       userId,
@@ -20,7 +20,7 @@ export function postCartItem(userId: number, productId: number, quantity: number
   });
 }
 
-export function updateCartItem(userId: number, productId: number, quantity: number) {
+  function updateCartItem(userId: number, productId: number, quantity: number) {
   const updated = prisma.cartItem.updateMany({
     where: {
       userId,
@@ -35,17 +35,16 @@ export function updateCartItem(userId: number, productId: number, quantity: numb
   return updated;
 }
 
-export function deleteCartItem(userId: number, productId: number) {
-  const deleted = prisma.cartItem.deleteMany({
+  function deleteCartItem(id: number) {
+  const deleted = prisma.cartItem.delete({
     where: {
-      productId,
-      userId,
+      id
     },
   });
   return deleted;
 }
 
-export function getCartItemByProductId(userId: number, productId: number) {
+  function getCartItemByProductId(userId: number, productId: number) {
   //check if there is already a cart item for the given product
   return prisma.cartItem.findMany({
     where: {
@@ -53,4 +52,13 @@ export function getCartItemByProductId(userId: number, productId: number) {
       userId,
     },
   });
+}
+
+
+export const cartRepository = {
+  getCart,
+  getCartItemByProductId
+  ,postCartItem,
+  updateCartItem,
+  deleteCartItem
 }
