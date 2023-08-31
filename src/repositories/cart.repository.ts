@@ -35,10 +35,11 @@ const prisma = new PrismaClient();
   return updated;
 }
 
-  function deleteCartItem(id: number) {
-  const deleted = prisma.cartItem.delete({
+  function deleteCartItem(userId: number, productId: number) {
+  const deleted = prisma.cartItem.deleteMany({
     where: {
-      id
+      userId,
+      productId
     },
   });
   return deleted;
