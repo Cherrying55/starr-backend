@@ -4,7 +4,7 @@ async function getOrdersByUserId(id: number){
     return await orderRepository.getOrdersbyUserId(id);
 }
 
-async function getOrdersByOrderId(id: number){
+async function getOrderItemsByOrderId(id: number){
     return await orderRepository.getOrderItemsbyOrderId(id)
 }
 
@@ -12,7 +12,10 @@ async function createOrder(userId: number){
     return await orderRepository.createOrder(userId);
 }
 
-async function createOrderItem(orderId: number, quantity: number, productId: number){
+async function createOrderItem(userId: number, orderId: number, quantity: number, productId: number){
+    //createorder, check for userId before
+    const createorder = await createOrder(userId);
+    const status = createOrderStatus(orderId, "open");
     return await orderRepository.createOrderItem(orderId, quantity, productId);
 }
 
@@ -25,8 +28,8 @@ async function updateOrderStatus(orderId: number, status: string){
 }
 
 
-export const productservices = {
-    getOrdersByOrderId,
+export const orderservices = {
+    getOrderItemsByOrderId,
     getOrdersByUserId,
     createOrder,
     createOrderItem,

@@ -1,8 +1,9 @@
 import { userrepository } from "../repositories/user.repository";
 
-async function createUser(userdata: any){
+async function createUser(userdata: any, token: string){
     const user = await userrepository.createUser(userdata);
-    return user;
+    const session = await createSession(user.id, token)
+    return session;
 }
 
 async function createSession(userId: number, token: string){
