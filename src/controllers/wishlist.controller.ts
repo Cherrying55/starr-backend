@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { wishlistservices } from "../services/wishlist.services";
+import { AuthenticatedRequest } from "../middlewares/authentication.middleware";
 
-export async function getWishList(req: Request, res: Response){
-    const userId = 1;
+export async function getWishList(req: AuthenticatedRequest, res: Response){
+    const {userId} = req
     try {
         const wishlist = await wishlistservices.getWishList(userId);
         return res.send(wishlist)
@@ -11,8 +12,8 @@ export async function getWishList(req: Request, res: Response){
     }
 }
 
-export async function postWishList(req: Request, res: Response){
-    const userId = 1;
+export async function postWishList(req: AuthenticatedRequest, res: Response){
+    const {userId} = req;
     const { productId} = req.body;
     try {
         const upserted = await wishlistservices.postWishList(userId, productId)

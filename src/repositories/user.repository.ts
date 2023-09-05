@@ -8,6 +8,22 @@ function createUser(userdata: any) {
   });
 }
 
+function getUserByEmail(email: string){
+  return prisma.user.findFirst({
+    where:{
+      email
+    }
+  })
+}
+
+function getUserById(id: number){
+  return prisma.user.findUnique({
+    where:{
+      id
+    }
+  })
+}
+
 function createSession(userId: number, token: string) {
   const upsertSession = prisma.userSession.upsert({
     where: {
@@ -55,7 +71,7 @@ function updatePassword(userId: number, password: string) {
   return updatePassword;
 }
 
-function updateBillingAddress(userId: number, data: any) {
+function updateBillingAddress(userId: number, id: number, data: any) {
   const updateBillingAddress = prisma.billingAddress.update({
     where: {
       id: userId,
@@ -65,6 +81,25 @@ function updateBillingAddress(userId: number, data: any) {
   return updateBillingAddress;
 }
 
+function getBillingAdressbyId(userId: number, id: number){
+  const billingaddress = prisma.billingAddress.findFirst({
+    where:{
+      userId,
+      id
+    }
+  })
+  return billingaddress
+}
+
+function deleteBillingAddress(userId: number, id: number){
+  const deleted = prisma.billingAddress.deleteMany({
+    where:{
+      userId,
+      id
+    }
+  })
+}
+
 export const userrepository = {
   createUser,
   createSession,
@@ -72,5 +107,9 @@ export const userrepository = {
   createLoginAttempt,
   updateBillingAddress,
   updatePassword,
-  createBillingAddress
+  createBillingAddress,
+  deleteBillingAddress,
+  getUserByEmail,
+  getUserById,
+  getBillingAdressbyId
 }

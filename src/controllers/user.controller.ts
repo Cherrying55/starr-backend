@@ -1,12 +1,16 @@
 import { Request, Response } from "express";
 import { creditService } from "../services/creditcard.services";
 import { userservice } from "../services/user.services";
+import { AuthenticatedRequest } from "../middlewares/authentication.middleware";
+import { createBillingAddressSchema } from "../schemas/createBillingAddress.schema";
 
 export async function signUp(req: Request, res: Response){
-    const userdata = req.body;
-    const token = "string";
+    //const { email, password } = req.body as SignInParams;
+
+    const {email, password, name} = req.body;
+    let userdata = {email, password, name};
 try {
-    const newuser = await userservice.createUser(userdata, token)
+    const newuser = await userservice.createUser(userdata)
     return res.send(newuser)
 } catch (error) {
     
@@ -16,26 +20,34 @@ try {
 
 
 export async function signIn(req: Request, res: Response){
-    const userId = 1;
-    const token = "string";
+    const { email, password} = req.body;
     const data = {tokenId: 1, executedAt: new Date().getTime(), status: "success"}
 try {
     await userservice.createLoginAttempt(data)
-    return res.send(token)
+    return await userservice.login(email,password)
+    
 } catch (error) {
     
 }
 }
 
-export async function createBillingAddress(req: Request, res: Response){
-    
+export async function createBillingAddress(req: AuthenticatedRequest, res: Response){
+    const { userId} = req;
+    const data = req.body as createBillingAddressSchema;
+    try{
+        const billingaddress = await userservice.createBillingAddress(data, userId);
+        return billingaddress
+    }
+    catch(e){
+
+    }
 }
 
-export async function updateCreditCard(req: Request, res: Response){
-    const userId = 1;
-    const creditId = 1;
+export async function updateBillingAddress(req: AuthenticatedRequest, res: Response){
+    const { userId} = req
+    const {id, country, state, city, zipcode, street, number, complemento} = req.body
     try{
-        const updated = await creditService.updateCreditCard(creditId, req.body)
+        const updated = await userservice.updateBillingAddress(userId, req.body, id)
         return res.send(updated)
     }
     catch(e){
@@ -43,11 +55,11 @@ export async function updateCreditCard(req: Request, res: Response){
     }
 }
 
-export async function deleteCreditCard(req: Request, res: Response){
+export async function deleteBillingAddress(req: Request, res: Response){
     const userId = 1;
-    const creditId = 1;
+    const {id} = req.body;
     try{
-        const deleted = await creditService.deleteCreditCard(creditId);
+        const deleted = await userservice.deleteBillingAddress(userId, id)
         return res.send(deleted)
     }
     catch(e){
