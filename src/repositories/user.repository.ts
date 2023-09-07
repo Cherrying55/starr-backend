@@ -8,20 +8,20 @@ function createUser(userdata: any) {
   });
 }
 
-function getUserByEmail(email: string){
+function getUserByEmail(email: string) {
   return prisma.user.findFirst({
-    where:{
-      email
-    }
-  })
+    where: {
+      email,
+    },
+  });
 }
 
-function getUserById(id: number){
+function getUserById(id: number) {
   return prisma.user.findUnique({
-    where:{
-      id
-    }
-  })
+    where: {
+      id,
+    },
+  });
 }
 
 function createSession(userId: number, token: string) {
@@ -81,23 +81,32 @@ function updateBillingAddress(userId: number, id: number, data: any) {
   return updateBillingAddress;
 }
 
-function getBillingAdressbyId(userId: number, id: number){
+function getBillingAdressbyId(userId: number, id: number) {
   const billingaddress = prisma.billingAddress.findFirst({
-    where:{
+    where: {
       userId,
-      id
-    }
-  })
-  return billingaddress
+      id,
+    },
+  });
+  return billingaddress;
 }
 
-function deleteBillingAddress(userId: number, id: number){
+function deleteBillingAddress(userId: number, id: number) {
   const deleted = prisma.billingAddress.deleteMany({
-    where:{
+    where: {
       userId,
-      id
-    }
-  })
+      id,
+    },
+  });
+}
+
+function getUserSessionByUserId(userId: number) {
+  const token = prisma.userSession.findUnique({
+    where: {
+      userId,
+    },
+  });
+  return token;
 }
 
 export const userrepository = {
@@ -111,5 +120,6 @@ export const userrepository = {
   deleteBillingAddress,
   getUserByEmail,
   getUserById,
-  getBillingAdressbyId
-}
+  getBillingAdressbyId,
+  getUserSessionByUserId,
+};

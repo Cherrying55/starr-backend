@@ -14,7 +14,7 @@ function postWishList(userId: number, productId: number) {
   const created = prisma.wishListItem.create({
     data: {
       userId,
-      productId
+      productId,
     },
   });
   return created;
@@ -44,5 +44,5 @@ export const wishlistrepository = {
   getWishList,
   postWishList,
   deleteWishList,
-  getWishListByProductId
-}
+  getWishListByProductId,
+};

@@ -1,89 +1,100 @@
-import { userrepository } from "../repositories/user.repository";
+import { userrepository } from '../repositories/user.repository';
 import jwt from 'jsonwebtoken';
-import bcrypt from "bcrypt"
-import { createBillingAddressSchema } from "../schemas/createBillingAddress.schema";
+import bcrypt from 'bcrypt';
+import { createBillingAddressSchema } from '../schemas/createBillingAddress.schema';
 
-async function createUser(userdata: any){
-    const hashedPassword = await bcrypt.hash(userdata.password, 12);
-    userdata.password = hashedPassword;
-    return await userrepository.createUser(userdata);
+async function createUser(userdata: any) {
+  const hashedPassword = await bcrypt.hash(userdata.password, 12);
+  userdata.password = hashedPassword;
+  return await userrepository.createUser(userdata);
 }
 
-async function login(email: string, password: string){
-    const hasuser = await userrepository.getUserByEmail(email);
-    if(!hasuser){
-        let err = new Error();
-        err.name = "403"
-        err.message = "403";
-        throw err;
+async function login(email: string, password: string) {
+  const hasuser = await userrepository.getUserByEmail(email);
+  if (!hasuser) {
+    let err = new Error();
+    err.name = '403';
+    err.message = '403';
+    throw err;
+  } else {
+    if (!bcrypt.compareSync(hasuser.password, password)) {
+      let err = new Error();
+      err.name = '403';
+      err.message = '403';
+      const token = await userrepository.getUserSessionByUserId(hasuser.id);
+      if (token) {
+        const newloginattempt = await userrepository.createLoginAttempt({ status: 'forbbiden', tokenId: token.id });
+      }
+      throw err;
     }
-    else{
-    if(!bcrypt.compareSync(hasuser.password, password)){
-        let err = new Error();
-        err.name = "403"
-        err.message = "403";
-        throw err;
+    return createSession(hasuser.id);
+  }
+}
+
+async function createSession(userId: number) {
+  const token = jwt.sign({ userId }, 'key');
+  const session = await userrepository.createSession(userId, token);
+  return session;
+}
+
+async function createLoginAttempt(data: any) {
+  const loginattempt = await userrepository.createLoginAttempt(data);
+  return loginattempt;
+}
+
+async function createBillingAddress(data: createBillingAddressSchema, userId: number) {
+  data.userId = userId;
+  const billingaddress = await userrepository.createBillingAddress(data);
+  return billingaddress;
+}
+
+async function updatePassword(userId: number, password: string, newpassword: string) {
+  const hasuser = await userrepository.getUserById(userId);
+  if (!hasuser) {
+    let err = new Error();
+    err.name = '403';
+    err.message = '403';
+    throw err;
+  } else {
+    if (!bcrypt.compareSync(hasuser.password, password)) {
+      let err = new Error();
+      err.name = '403';
+      err.message = '403';
+      throw err;
     }
-    return createSession(hasuser.id)
-   
-    }
+    const retiredpassword = await userrepository.createRetiredPassword({ userId, password });
+    newpassword = bcrypt.hash(newpassword, 12);
+    const updatepassword = await userrepository.updatePassword(userId, newpassword);
+    return updatepassword;
+  }
 }
 
-async function createSession(userId: number){
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET);
-    const session = await userrepository.createSession(userId, token);
-    return session
+async function updateBillingAddress(userId: number, data: any, id: number) {
+  //check if it exists
+  const hasbillingaddress = await userrepository.getBillingAdressbyId(userId, id);
+  if (!hasbillingaddress) {
+    throw new Error();
+  }
+  const updatebillingaddress = await userrepository.updateBillingAddress(userId, id, data);
+  return updatebillingaddress;
 }
 
-async function createLoginAttempt(data: any){
-    const loginattempt = await userrepository.createLoginAttempt(data);
-    return loginattempt
+async function deleteBillingAddress(userId: number, id: number) {
+  const hasbillingaddress = await userrepository.getBillingAdressbyId(userId, id);
+  if (!hasbillingaddress) {
+    throw new Error();
+  }
+  const deletebillingaddress = await userrepository.deleteBillingAddress(userId, id);
+  return deletebillingaddress;
 }
-
-async function createRetiredPassword(data: any){
-    const retiredpassword = await userrepository.createRetiredPassword(data);
-    return retiredpassword
-}
-
-async function createBillingAddress(data: createBillingAddressSchema, userId: number){
-    data.userId = userId;
-    const billingaddress = await userrepository.createBillingAddress(data);
-    return billingaddress
-}
-
-async function updatePassword(userId: number, password: string){
-    const updatepassword = await userrepository.updatePassword(userId, password)
-    return updatepassword
-}
-
-async function updateBillingAddress(userId: number, data: any, id: number){
-    //check if it exists
-    const hasbillingaddress = await userrepository.getBillingAdressbyId(userId, id);
-    if(!hasbillingaddress){
-        throw new Error()
-    }
-    const updatebillingaddress = await userrepository.updateBillingAddress(userId, id, data)
-    return updatebillingaddress
-}
-
-async function deleteBillingAddress(userId: number, id: number){
-    const hasbillingaddress = await userrepository.getBillingAdressbyId(userId, id);
-    if(!hasbillingaddress){
-        throw new Error()
-    }
-    const deletebillingaddress = await userrepository.deleteBillingAddress(userId, id)
-    return deletebillingaddress
-}
-
 
 export const userservice = {
-    createUser,
-    createSession,
-    createLoginAttempt,
-    createRetiredPassword
-    ,createBillingAddress,
-    updateBillingAddress,
-    updatePassword
-    ,login,
-    deleteBillingAddress
-}
+  createUser,
+  createSession,
+  createLoginAttempt,
+  createBillingAddress,
+  updateBillingAddress,
+  updatePassword,
+  login,
+  deleteBillingAddress,
+};

@@ -18,7 +18,7 @@ function getOrderItemsbyOrderId(orderId: number) {
   });
 }
 
-  function createOrder(userId: number) {
+function createOrder(userId: number) {
   const created = prisma.order.create({
     data: {
       userId,
@@ -27,7 +27,7 @@ function getOrderItemsbyOrderId(orderId: number) {
   return created;
 }
 
-  function createOrderItem(orderId: number, quantity: number, productId: number) {
+function createOrderItem(orderId: number, quantity: number, productId: number) {
   const created = prisma.orderItem.create({
     data: {
       orderId,
@@ -38,7 +38,7 @@ function getOrderItemsbyOrderId(orderId: number) {
   return created;
 }
 
-  function createOrderStatus(orderId: number, status: string) {
+function createOrderStatus(orderId: number, status: string) {
   const created = prisma.orderStatus.create({
     data: {
       orderId,
@@ -48,7 +48,7 @@ function getOrderItemsbyOrderId(orderId: number) {
   return created;
 }
 
-  function updateOrderStatus(orderId: number, status: string) {
+function updateOrderStatus(orderId: number, status: string) {
   const updated = prisma.orderStatus.update({
     where: {
       orderId,
@@ -60,11 +60,20 @@ function getOrderItemsbyOrderId(orderId: number) {
   return updated;
 }
 
+function getOrderById(id: number) {
+  return prisma.order.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
 export const orderRepository = {
   getOrdersbyUserId,
   getOrderItemsbyOrderId,
   createOrder,
   createOrderItem,
   createOrderStatus,
-  updateOrderStatus
-}
+  updateOrderStatus,
+  getOrderById,
+};

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "TokenCreditUses" ALTER COLUMN "executedAt" SET DEFAULT CURRENT_TIMESTAMP;

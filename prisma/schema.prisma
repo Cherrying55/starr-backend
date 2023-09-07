@@ -33,7 +33,7 @@ model RetiredPassword {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   password  String
-  retiredAt DateTime
+  retiredAt DateTime @default(now())
   createdAt DateTime @default(now())
 }
 
@@ -66,7 +66,7 @@ model LoginAttempt {
   tokenId    Int
   token      UserSession @relation(fields: [tokenId], references: [id])
   status     String
-  executedAt DateTime
+  executedAt DateTime    @default(now())
   createdAt  DateTime    @default(now())
 }
 
@@ -94,7 +94,7 @@ model TokenCredit {
 model TokenCreditUses {
   id            Int         @id @default(autoincrement())
   operationtype String
-  executedAt    DateTime
+  executedAt    DateTime    @default(now())
   token         TokenCredit @relation(fields: [tokenId], references: [id])
   tokenId       Int
   status        String

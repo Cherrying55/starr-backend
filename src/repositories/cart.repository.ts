@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-  function getCart(userId: number) {
+function getCart(userId: number) {
   return prisma.cartItem.findMany({
     where: {
       userId,
@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
   });
 }
 
-  function postCartItem(userId: number, productId: number, quantity: number) {
+function postCartItem(userId: number, productId: number, quantity: number) {
   return prisma.cartItem.create({
     data: {
       userId,
@@ -20,7 +20,7 @@ const prisma = new PrismaClient();
   });
 }
 
-  function updateCartItem(userId: number, productId: number, quantity: number) {
+function updateCartItem(userId: number, productId: number, quantity: number) {
   const updated = prisma.cartItem.updateMany({
     where: {
       userId,
@@ -35,17 +35,17 @@ const prisma = new PrismaClient();
   return updated;
 }
 
-  function deleteCartItem(userId: number, productId: number) {
+function deleteCartItem(userId: number, productId: number) {
   const deleted = prisma.cartItem.deleteMany({
     where: {
       userId,
-      productId
+      productId,
     },
   });
   return deleted;
 }
 
-  function getCartItemByProductId(userId: number, productId: number) {
+function getCartItemByProductId(userId: number, productId: number) {
   //check if there is already a cart item for the given product
   return prisma.cartItem.findMany({
     where: {
@@ -55,11 +55,10 @@ const prisma = new PrismaClient();
   });
 }
 
-
 export const cartRepository = {
   getCart,
-  getCartItemByProductId
-  ,postCartItem,
+  getCartItemByProductId,
+  postCartItem,
   updateCartItem,
-  deleteCartItem
-}
+  deleteCartItem,
+};

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-  function getCreditCardbyUserId(userId: number) {
+function getCreditCardbyUserId(userId: number) {
   return prisma.creditCard.findFirst({
     where: {
       userId,
@@ -10,13 +10,13 @@ const prisma = new PrismaClient();
   });
 }
 
-  function createCreditCard(data: any) {
+function createCreditCard(data: any) {
   return prisma.creditCard.create({
     data,
   });
 }
 
-  function createCreditToken(creditId: number, token: string) {
+function createCreditToken(creditId: number, token: string) {
   const upsertSession = prisma.tokenCredit.upsert({
     where: {
       creditId,
@@ -32,19 +32,14 @@ const prisma = new PrismaClient();
   return upsertSession;
 }
 
-  function createTokenCreditUse(tokenId: number, operationtype: string, executedAt: string, status: string) {
+function createTokenCreditUse(data: any) {
   const created = prisma.tokenCreditUses.create({
-    data: {
-      tokenId,
-      operationtype,
-      executedAt,
-      status,
-    },
+    data,
   });
   return created;
 }
 
-  function updateCreditCard(creditId: number, data: any) {
+function updateCreditCard(creditId: number, data: any) {
   const updated = prisma.creditCard.update({
     where: {
       id: creditId,
@@ -54,7 +49,7 @@ const prisma = new PrismaClient();
   return updated;
 }
 
-  function deleteCreditCard(creditId: number) {
+function deleteCreditCard(creditId: number) {
   const deleted = prisma.creditCard.delete({
     where: {
       id: creditId,
@@ -63,13 +58,21 @@ const prisma = new PrismaClient();
   return deleted;
 }
 
-  function deleteTokenCredit(creditId: number) {
+function deleteTokenCredit(creditId: number) {
   const deleted = prisma.tokenCredit.delete({
     where: {
       creditId,
     },
   });
   return deleted;
+}
+
+function getTokenCreditByCreditId(creditId: number) {
+  return prisma.tokenCredit.findUnique({
+    where: {
+      creditId,
+    },
+  });
 }
 
 export const creditRepository = {
@@ -79,5 +82,6 @@ export const creditRepository = {
   createTokenCreditUse,
   deleteCreditCard,
   deleteTokenCredit,
-  updateCreditCard
-}
+  updateCreditCard,
+  getTokenCreditByCreditId,
+};

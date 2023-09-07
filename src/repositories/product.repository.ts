@@ -18,7 +18,7 @@ function getProductByCategoryId(categoryId: number) {
   });
 }
 
- function updateProductStock(productId: number, stock: number) {
+function updateProductStock(productId: number, stock: number) {
   const updated = prisma.product.update({
     where: {
       id: productId,
@@ -33,5 +33,5 @@ function getProductByCategoryId(categoryId: number) {
 export const productrepository = {
   getAllProducts,
   getProductByCategoryId,
-  updateProductStock
-}
+  updateProductStock,
+};
