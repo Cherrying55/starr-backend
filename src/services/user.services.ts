@@ -1,12 +1,19 @@
 import { userrepository } from '../repositories/user.repository';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import { createBillingAddressSchema } from '../schemas/createBillingAddress.schema';
+import { User } from '@prisma/client';
 
-async function createUser(userdata: any) {
-  const hashedPassword = await bcrypt.hash(userdata.password, 12);
-  userdata.password = hashedPassword;
-  return await userrepository.createUser(userdata);
+import bcrypt from 'bcrypt';
+type CreateUserParams = Pick<User, 'email' | 'password' | 'birthDate'>;
+
+async function createUser(data:any) {
+  const hashedPassword = bcrypt.hashSync(data.password, 12);
+  console.log(hashedPassword)
+  data.password = hashedPassword;
+  console.log(data.password)
+  const newuser = await userrepository.createUser(data);
+  console.log(newuser);
+  return newuser;
 }
 
 async function login(email: string, password: string) {
@@ -63,7 +70,7 @@ async function updatePassword(userId: number, password: string, newpassword: str
       throw err;
     }
     const retiredpassword = await userrepository.createRetiredPassword({ userId, password });
-    newpassword = bcrypt.hash(newpassword, 12);
+    newpassword = await bcrypt.hash(newpassword, 12);
     const updatepassword = await userrepository.updatePassword(userId, newpassword);
     return updatepassword;
   }
@@ -88,6 +95,9 @@ async function deleteBillingAddress(userId: number, id: number) {
   return deletebillingaddress;
 }
 
+async function getBillingAddress(id: number, userId: number){
+  return await userrepository.getBillingAdressbyId(userId,id)
+}
 export const userservice = {
   createUser,
   createSession,
@@ -97,4 +107,5 @@ export const userservice = {
   updatePassword,
   login,
   deleteBillingAddress,
+  getBillingAddress
 };

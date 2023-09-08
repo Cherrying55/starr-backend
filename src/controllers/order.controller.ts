@@ -12,9 +12,9 @@ export async function getOrdersByUserId(req: AuthenticatedRequest, res: Response
 
 export async function getOrderItemsByOrderId(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { orderId } = req.body;
+  const { id } = req.params
   try {
-    const orderitems = await orderservices.getOrderItemsByOrderId(orderId, userId);
+    const orderitems = await orderservices.getOrderItemsByOrderId(Number(id), userId);
     return res.send(orderitems);
   } catch (error) {}
 }

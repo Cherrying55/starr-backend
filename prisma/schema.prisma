@@ -17,7 +17,7 @@ model User {
   name             String?
   cardToken        Int?
   billingaddress   Int?
-  birthDate        DateTime
+  birthDate        DateTime?
   session          UserSession?
   creditcard       CreditCard[]
   billingaddresses BillingAddress[]

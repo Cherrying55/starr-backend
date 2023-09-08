@@ -9,9 +9,9 @@ export async function getAllProducts(req: Request, res: Response) {
 }
 
 export async function getProductByCategoryId(req: Request, res: Response) {
-  const { categoryId } = req.body;
+  const { id } = req.params
   try {
-    const products = await productservices.getProductByCategoryId(categoryId);
+    const products = await productservices.getProductByCategoryId(Number(id));
     return res.send(products);
   } catch (e) {}
 }

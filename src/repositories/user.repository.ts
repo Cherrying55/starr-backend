@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-function createUser(userdata: any) {
+function createUser(userdata: Prisma.UserUncheckedCreateInput) {
   return prisma.user.create({
     data: userdata,
   });

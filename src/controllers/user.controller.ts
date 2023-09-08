@@ -7,8 +7,8 @@ import { createBillingAddressSchema } from '../schemas/createBillingAddress.sche
 export async function signUp(req: Request, res: Response) {
   //const { email, password } = req.body as SignInParams;
 
-  const { email, password, name } = req.body;
-  let userdata = { email, password, name };
+  const { email, password, name} = req.body;
+  let userdata = { email, password, name};
   try {
     const newuser = await userservice.createUser(userdata);
     return res.send(newuser);
@@ -29,8 +29,18 @@ export async function createBillingAddress(req: AuthenticatedRequest, res: Respo
   const data = req.body as createBillingAddressSchema;
   try {
     const billingaddress = await userservice.createBillingAddress(data, userId);
-    return billingaddress;
+    return res.send(billingaddress);
   } catch (e) {}
+}
+
+export async function getBillingAddress(req: AuthenticatedRequest, res: Response){
+  const {userId} = req;
+  try {
+    const billingaddress = await userservice.getBillingAddress(Number(req.params.id), userId)
+    return res.send(billingaddress)
+  } catch (error) {
+    
+  }
 }
 
 export async function updateBillingAddress(req: AuthenticatedRequest, res: Response) {
@@ -44,9 +54,9 @@ export async function updateBillingAddress(req: AuthenticatedRequest, res: Respo
 
 export async function deleteBillingAddress(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { id } = req.body;
+  const { id } = req.params
   try {
-    const deleted = await userservice.deleteBillingAddress(userId, id);
+    const deleted = await userservice.deleteBillingAddress(userId, Number(id));
     return res.send(deleted);
   } catch (e) {}
 }

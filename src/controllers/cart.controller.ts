@@ -12,39 +12,40 @@ export async function getCart(req: AuthenticatedRequest, res: Response) {
 
 export async function getCartItemByProductId(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { productId } = req.body;
+  const { productId } = req.params
 
   try {
-    const cartitems = await cartService.getCartItemByProductId(userId, productId);
+    const cartitems = await cartService.getCartItemByProductId(userId, Number(productId));
     return res.send(cartitems);
   } catch (e) {}
 }
 
 export async function postCartItem(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { productId, quantity } = req.body;
+  const { productId, quantity} = req.body
 
   try {
-    const created = await cartService.createCartItem(userId, productId, quantity);
+    const created = await cartService.createCartItem(userId, Number(productId), quantity);
     return res.send(created);
   } catch (e) {}
 }
 
 export async function deleteCartItem(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { productId } = req.body;
+  const { productId} = req.params
   try {
-    const deleted = await cartService.deleteCartItem(userId, productId);
+    const deleted = await cartService.deleteCartItem(userId, Number(productId));
     return res.send(deleted);
   } catch (error) {}
 }
 
 export async function updateCartItem(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { productId, quantity } = req.body;
+  const { productId} = req.params
+  const {quantity} = req.body;
 
   try {
-    const updated = await cartService.updateCartItem(userId, productId, quantity);
+    const updated = await cartService.updateCartItem(userId, Number(productId), quantity);
     return res.send(updated);
   } catch (e) {}
 }

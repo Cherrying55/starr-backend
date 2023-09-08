@@ -21,9 +21,9 @@ export async function postWishList(req: AuthenticatedRequest, res: Response) {
 
 export async function deleteWishList(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { productId } = req.body;
+  const { productId } = req.params
   try {
-    const deleted = await wishlistservices.deleteWishList(userId, productId);
+    const deleted = await wishlistservices.deleteWishList(userId, Number(productId));
     return res.send(deleted);
   } catch (e) {}
 }
