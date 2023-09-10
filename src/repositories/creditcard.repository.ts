@@ -6,17 +6,17 @@ function getCreditCardbyId(userId: number, id: number) {
   return prisma.creditCard.findFirst({
     where: {
       userId,
-      id
+      id,
     },
   });
 }
 
-function getCreditCards(userId: number){
+function getCreditCards(userId: number) {
   return prisma.creditCard.findMany({
-    where:{
-      userId
-    }
-  })
+    where: {
+      userId,
+    },
+  });
 }
 
 function createCreditCard(data: any) {

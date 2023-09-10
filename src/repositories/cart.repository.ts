@@ -4,9 +4,9 @@ const prisma = new PrismaClient();
 
 function getCart(userId: number) {
   return prisma.cartItem.findMany({
-    where:{
-      userId
-    }
+    where: {
+      userId,
+    },
   });
 }
 

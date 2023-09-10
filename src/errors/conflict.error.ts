@@ -1,4 +1,4 @@
-import { ApplicationError } from "./protocol";
+import { ApplicationError } from './protocol';
 
 export function conflictError(): ApplicationError {
   return {

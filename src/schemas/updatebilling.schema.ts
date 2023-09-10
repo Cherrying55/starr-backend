@@ -1,16 +1,15 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export type UpdateBilling = {
-    id: number,
-    country: string, 
-    state : string, 
-    city: string, 
-    zipcode : string, 
-    street : string, 
-    number: string, 
-    complemento : string
-
-}
+  id: number;
+  country: string;
+  state: string;
+  city: string;
+  zipcode: string;
+  street: string;
+  number: string;
+  complemento: string;
+};
 
 export const updateBillingSchema = Joi.object<UpdateBilling>({
   id: Joi.number().required(),
@@ -21,4 +20,4 @@ export const updateBillingSchema = Joi.object<UpdateBilling>({
   street: Joi.string().required(),
   number: Joi.string().required(),
   complemento: Joi.string().required(),
-})
+});

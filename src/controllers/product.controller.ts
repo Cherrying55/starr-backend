@@ -8,16 +8,16 @@ export async function getAllProducts(req: Request, res: Response) {
     const products = await productservices.getAllProducts();
     return res.send(products);
   } catch (error) {
-    return res.sendStatus(handleErrors(error as ApplicationError))
+    return res.sendStatus(handleErrors(error as ApplicationError));
   }
 }
 
 export async function getProductByCategoryId(req: Request, res: Response) {
-  const { id } = req.params
+  const { id } = req.params;
   try {
     const products = await productservices.getProductByCategoryId(Number(id));
     return res.send(products);
   } catch (e) {
-    return res.sendStatus(handleErrors(e as ApplicationError))
+    return res.sendStatus(handleErrors(e as ApplicationError));
   }
 }

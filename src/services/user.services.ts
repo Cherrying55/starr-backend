@@ -9,10 +9,10 @@ import { notfoundError } from '@/errors/notfound.error';
 import { unauthorizedError } from '@/errors/unauthorized.error';
 type CreateUserParams = Pick<User, 'email' | 'password' | 'birthDate'>;
 
-async function createUser(data:any) {
+async function createUser(data: any) {
   const hasuser = await userrepository.getUserByEmail(data.email);
-  if(hasuser){
-    throw conflictError()
+  if (hasuser) {
+    throw conflictError();
   }
   const hashedPassword = bcrypt.hashSync(data.password, 12);
   data.password = hashedPassword;
@@ -23,27 +23,27 @@ async function createUser(data:any) {
 async function login(email: string, password: string) {
   const hasuser = await userrepository.getUserByEmail(email);
   if (!hasuser) {
-    throw notfoundError("User")
+    throw notfoundError('User');
   } else {
     if (!bcrypt.compareSync(`${password}`, hasuser.password)) {
       const token = await userrepository.getUserSessionByUserId(hasuser.id);
       if (token) {
         const newloginattempt = await userrepository.createLoginAttempt({ status: 'forbbiden', tokenId: token.id });
       }
-      throw unauthorizedError()
+      throw unauthorizedError();
     }
     return createSession(hasuser.id);
   }
 }
 
 async function createSession(userId: number) {
-  console.log("token will be made")
+  console.log('token will be made');
   const token = jwt.sign({ userId }, 'key');
-  console.log(token)
+  console.log(token);
   type TokenParams = Pick<UserSession, 'userId' | 'token'>;
-  const data : TokenParams = {userId, token}
+  const data: TokenParams = { userId, token };
   const session = await userrepository.createSession(data);
-  return session.token
+  return session.token;
 }
 
 async function createLoginAttempt(data: any) {
@@ -52,9 +52,9 @@ async function createLoginAttempt(data: any) {
 }
 
 async function createBillingAddress(data: createBillingAddressSchema, userId: number) {
-  const hasuser = await userrepository.getUserById(userId)
+  const hasuser = await userrepository.getUserById(userId);
   if (!hasuser) {
-    throw notfoundError("User")
+    throw notfoundError('User');
   }
   data.userId = userId;
   const billingaddress = await userrepository.createBillingAddress(data);
@@ -64,10 +64,10 @@ async function createBillingAddress(data: createBillingAddressSchema, userId: nu
 async function updatePassword(userId: number, password: string, newpassword: string) {
   const hasuser = await userrepository.getUserById(userId);
   if (!hasuser) {
-    throw notfoundError("User")
+    throw notfoundError('User');
   } else {
     if (!bcrypt.compareSync(hasuser.password, password)) {
-      throw unauthorizedError()
+      throw unauthorizedError();
     }
     const retiredpassword = await userrepository.createRetiredPassword({ userId, password });
     newpassword = await bcrypt.hash(newpassword, 12);
@@ -79,11 +79,11 @@ async function updatePassword(userId: number, password: string, newpassword: str
 async function updateBillingAddress(userId: number, data: any, id: number) {
   const hasuser = await userrepository.getUserById(userId);
   if (!hasuser) {
-    throw notfoundError("User")
+    throw notfoundError('User');
   }
   const hasbillingaddress = await userrepository.getBillingAdressbyId(userId, id);
   if (!hasbillingaddress) {
-    throw notfoundError("Billing address")
+    throw notfoundError('Billing address');
   }
   const updatebillingaddress = await userrepository.updateBillingAddress(userId, id, data);
   return updatebillingaddress;
@@ -92,22 +92,22 @@ async function updateBillingAddress(userId: number, data: any, id: number) {
 async function deleteBillingAddress(userId: number, id: number) {
   const hasuser = await userrepository.getUserById(userId);
   if (!hasuser) {
-    throw notfoundError("User")
+    throw notfoundError('User');
   }
   const hasbillingaddress = await userrepository.getBillingAdressbyId(userId, id);
   if (!hasbillingaddress) {
-    throw notfoundError("Billing address")
+    throw notfoundError('Billing address');
   }
   const deletebillingaddress = await userrepository.deleteBillingAddress(userId, id);
   return deletebillingaddress;
 }
 
-async function getBillingAddress(id: number, userId: number){
+async function getBillingAddress(id: number, userId: number) {
   const hasuser = await userrepository.getUserById(userId);
   if (!hasuser) {
-    throw notfoundError("User")
+    throw notfoundError('User');
   }
-  return await userrepository.getBillingAdressbyId(userId,id)
+  return await userrepository.getBillingAdressbyId(userId, id);
 }
 export const userservice = {
   createUser,
@@ -118,5 +118,5 @@ export const userservice = {
   updatePassword,
   login,
   deleteBillingAddress,
-  getBillingAddress
+  getBillingAddress,
 };

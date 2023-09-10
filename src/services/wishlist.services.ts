@@ -10,7 +10,7 @@ async function postWishList(userId: number, productId: number) {
   //substituivel por upsert
   const already = await wishlistrepository.getWishListByProductId(userId, productId);
   if (already.length !== 0) {
-    throw conflictError()
+    throw conflictError();
   }
   const wishlist = await wishlistrepository.postWishList(userId, productId);
   return wishlist;

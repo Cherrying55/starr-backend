@@ -1,10 +1,9 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export type PasswordBody = {
-    password: string
-
-}
+  password: string;
+};
 
 export const passwordbodySchema = Joi.object<PasswordBody>({
   password: Joi.string().required(),
-})
+});

@@ -28,17 +28,17 @@ function getUserById(id: number) {
 async function createSession(data: Prisma.UserSessionUncheckedCreateInput) {
   const upsertSession = prisma.userSession.upsert({
     create: {
-     userId: data.userId,
-     token: data.token
+      userId: data.userId,
+      token: data.token,
     },
     update: {
       token: data.token,
     },
     where: {
       userId: data.userId,
-    }
-  })
-   
+    },
+  });
+
   return await upsertSession;
 }
 

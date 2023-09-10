@@ -37,22 +37,21 @@ import cors from 'cors';
 loadEnv();
 
 const app = express();
-app.use(cors())
-app.use(express.json())
-.get('/health', (_req, res) => res.send('OK!'))
-app.use('/cart', cartRouter)
-app.use("/credit", creditRouter)
-app.use("/orders", orderRouter)
-app.use("/products", productRouter)
-app.use('/auth', userRouter)
-app.use("/wishlist", wishListRouter)
+app.use(cors());
+app.use(express.json()).get('/health', (_req, res) => res.send('OK!'));
+app.use('/cart', cartRouter);
+app.use('/credit', creditRouter);
+app.use('/orders', orderRouter);
+app.use('/products', productRouter);
+app.use('/auth', userRouter);
+app.use('/wishlist', wishListRouter);
 
 export function init(): Promise<Express> {
-    connectDb();
-    return Promise.resolve(app);
-  }
+  connectDb();
+  return Promise.resolve(app);
+}
 
-  export async function close(): Promise<void> {
-    await disconnectDB();
-  }
-  export default app;  
+export async function close(): Promise<void> {
+  await disconnectDB();
+}
+export default app;

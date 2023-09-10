@@ -10,7 +10,6 @@ export type ApplicationError = {
   message: string;
 };
 
-
 function unauthorizedError(): ApplicationError {
   return {
     name: 'UnauthorizedError',
@@ -18,7 +17,7 @@ function unauthorizedError(): ApplicationError {
   };
 }
 
-export async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction){
+export async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.header('Authorization');
   if (!authHeader) return generateUnauthorizedResponse(res);
 
@@ -47,8 +46,8 @@ function generateUnauthorizedResponse(res: Response) {
   res.status(httpStatus.UNAUTHORIZED).send(unauthorizedError());
 }
 
-export type AuthenticatedRequest = Request & JWTPayload
+export type AuthenticatedRequest = Request & JWTPayload;
 
 type JWTPayload = {
-  userId: number
+  userId: number;
 };

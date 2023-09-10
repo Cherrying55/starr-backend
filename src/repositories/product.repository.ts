@@ -18,12 +18,12 @@ function getProductByCategoryId(categoryId: number) {
   });
 }
 
-function getProductById(id: number){
+function getProductById(id: number) {
   return prisma.product.findUnique({
-    where:{
-      id
-    }
-  })
+    where: {
+      id,
+    },
+  });
 }
 function updateProductStock(productId: number, stock: number) {
   const updated = prisma.product.update({
@@ -41,5 +41,5 @@ export const productrepository = {
   getAllProducts,
   getProductByCategoryId,
   updateProductStock,
-  getProductById
+  getProductById,
 };
