@@ -2,15 +2,16 @@ import { Request, Response } from 'express';
 import { creditService } from '../services/creditcard.services';
 import { userservice } from '../services/user.services';
 import { AuthenticatedRequest } from '../middlewares/authentication.middleware';
-import { createBillingAddressSchema } from '../schemas/createBillingAddress.schema';
+import { createBillingAddressSchema } from '@/schemas/protocols';
 import { handleErrors } from '@/errors/handleerrors';
 import { ApplicationError } from '@/errors/protocol';
+import { SignIn } from '@/schemas/signin.schema';
+import { User } from '@/schemas/signup.schema';
 
 export async function signUp(req: Request, res: Response) {
   //const { email, password } = req.body as SignInParams;
 
-  const { email, password, name} = req.body;
-  let userdata = { email, password, name};
+  const userdata = req.body as User
   try {
     const newuser = await userservice.createUser(userdata);
     return res.send(newuser);
@@ -19,13 +20,10 @@ export async function signUp(req: Request, res: Response) {
   }
 }
 
-type SignInParams = {
-  email: string,
-  password: string
-}
+
 
 export async function signIn(req: Request, res: Response) {
-  const { email, password } = req.body as SignInParams
+  const { email, password } = req.body as SignIn
   //const data = { tokenId: 1, executedAt: new Date().getTime(), status: 'success' };
   try {
     //await userservice.createLoginAttempt(data);

@@ -16,9 +16,9 @@ export async function getWishList(req: AuthenticatedRequest, res: Response) {
 
 export async function postWishList(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { productId } = req.body;
+  const { productId } = req.params;
   try {
-    const upserted = await wishlistservices.postWishList(userId, productId);
+    const upserted = await wishlistservices.postWishList(userId, Number(productId));
     return res.send(upserted);
   } catch (error) {
     return res.sendStatus(handleErrors(error as ApplicationError))

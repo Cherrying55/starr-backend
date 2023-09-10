@@ -3,12 +3,14 @@ import { creditService } from '../services/creditcard.services';
 import { AuthenticatedRequest } from '../middlewares/authentication.middleware';
 import { handleErrors } from '@/errors/handleerrors';
 import { ApplicationError } from '@/errors/protocol';
+import { PasswordBody } from '@/schemas/passwordBody.schema';
+import { Credit } from '@/schemas/credit.schema';
 
 export async function getCreditCards(req: AuthenticatedRequest, res: Response) {
   const { userId} = req;
-  const {password} = req.body;
+  const password = req.body as PasswordBody
   try {
-    const creditcard = await creditService.getCreditCards(userId, password);
+    const creditcard = await creditService.getCreditCards(userId, password.password);
     return res.send(creditcard);
   } catch (error) {
     return res.sendStatus(handleErrors(error as ApplicationError))
@@ -17,10 +19,11 @@ export async function getCreditCards(req: AuthenticatedRequest, res: Response) {
 
 export async function createCreditCard(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
+  const body = req.body as Credit;
   const data = {
-    PAN: req.body.PAN,
-    cardholdername: req.body.cardholdername,
-    brand: req.body.brand,
+    PAN: body.PAN,
+    cardholdername: body.cardholdername,
+    brand: body.brand,
     userId,
   };
   try {
@@ -34,10 +37,11 @@ export async function createCreditCard(req: AuthenticatedRequest, res: Response)
 export async function updateCreditCard(req: AuthenticatedRequest, res: Response) {
   const { userId} = req;
   const {creditId} = req.params
+  const body = req.body as Credit
   const data = {
-    PAN: req.body.PAN,
-    cardholdername: req.body.cardholdername,
-    brand: req.body.brand,
+    PAN: body.PAN,
+    cardholdername: body.cardholdername,
+    brand: body.brand,
     userId,
   };
   try {
@@ -51,9 +55,9 @@ export async function updateCreditCard(req: AuthenticatedRequest, res: Response)
 export async function deleteCreditCard(req: AuthenticatedRequest, res: Response) {
   const { userId} = req;
   const {creditId} = req.params
-  const {password} = req.body
+  const password = req.body as PasswordBody
   try {
-    const deleted = await creditService.deleteCreditCard(userId, Number(creditId), password);
+    const deleted = await creditService.deleteCreditCard(userId, Number(creditId), password.password);
     return res.send(deleted);
   } catch (e) {
     return res.sendStatus(handleErrors(e as ApplicationError))

@@ -1,6 +1,6 @@
 import { userrepository } from '../repositories/user.repository';
 import jwt from 'jsonwebtoken';
-import { createBillingAddressSchema } from '../schemas/createBillingAddress.schema';
+import { createBillingAddressSchema } from '@/schemas/protocols';
 import { User, UserSession } from '@prisma/client';
 
 import bcrypt from 'bcrypt';

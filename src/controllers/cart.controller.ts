@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/authentication.middleware';
 import { handleErrors } from '@/errors/handleerrors';
 import { ApplicationError } from '@/errors/protocol';
+import { CreateCart, createCartSchema } from '@/schemas/createCartandWish.schema';
+import { UpdateCart } from '@/schemas/updateCart.schema';
 
 export async function getCart(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
@@ -28,7 +30,7 @@ export async function getCartItemByProductId(req: AuthenticatedRequest, res: Res
 
 export async function postCartItem(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { productId, quantity} = req.body
+  const { productId, quantity} = req.body as CreateCart
 
   try {
     const created = await cartService.createCartItem(userId, Number(productId), quantity);
@@ -52,7 +54,7 @@ export async function deleteCartItem(req: AuthenticatedRequest, res: Response) {
 export async function updateCartItem(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const { productId} = req.params
-  const {quantity} = req.body;
+  const {quantity} = req.body as UpdateCart
 
   try {
     const updated = await cartService.updateCartItem(userId, Number(productId), quantity);

@@ -3,6 +3,7 @@ import { orderservices } from '../services/order.services';
 import { AuthenticatedRequest } from '../middlewares/authentication.middleware';
 import { handleErrors } from '@/errors/handleerrors';
 import { ApplicationError } from '@/errors/protocol';
+import { CreateCart } from '@/schemas/createCartandWish.schema';
 
 export async function getOrdersByUserId(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
@@ -27,9 +28,9 @@ export async function getOrderItemsByOrderId(req: AuthenticatedRequest, res: Res
 
 export async function createOrder(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const {quantity, productId } = req.body;
+  const body = req.body as CreateCart
   try {
-    const created = await orderservices.createOrderItem(userId,quantity, productId);
+    const created = await orderservices.createOrderItem(userId,body.quantity, body.productId);
     return res.send(created);
   } catch (error) {
     return res.sendStatus(handleErrors(error as ApplicationError))
