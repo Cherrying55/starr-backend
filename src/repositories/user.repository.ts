@@ -25,21 +25,21 @@ function getUserById(id: number) {
   });
 }
 
-function createSession(userId: number, token: string) {
+async function createSession(data: Prisma.UserSessionUncheckedCreateInput) {
   const upsertSession = prisma.userSession.upsert({
-    where: {
-      userId,
+    create: {
+     userId: data.userId,
+     token: data.token
     },
     update: {
-      token,
+      token: data.token,
     },
-    create: {
-      userId,
-      token,
-    },
-  });
-
-  return upsertSession;
+    where: {
+      userId: data.userId,
+    }
+  })
+   
+  return await upsertSession;
 }
 
 function createLoginAttempt(data: any) {

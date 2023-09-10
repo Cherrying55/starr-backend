@@ -73,7 +73,7 @@ model LoginAttempt {
 model CreditCard {
   id             Int          @id @default(autoincrement())
   PAN            String
-  expirationdate DateTime
+  expirationdate DateTime     @default(now())
   cardholdername String
   brand          String
   user           User         @relation(fields: [userId], references: [id])

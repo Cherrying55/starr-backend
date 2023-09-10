@@ -5,7 +5,7 @@ import { AuthenticatedRequest } from '../middlewares/authentication.middleware';
 export async function getCart(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   try {
-    const cart = cartService.getCart(userId);
+    const cart = await cartService.getCart(userId);
     return res.send(cart);
   } catch (error) {}
 }

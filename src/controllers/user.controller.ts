@@ -15,12 +15,17 @@ export async function signUp(req: Request, res: Response) {
   } catch (error) {}
 }
 
+type SignInParams = {
+  email: string,
+  password: string
+}
+
 export async function signIn(req: Request, res: Response) {
-  const { email, password } = req.body;
-  const data = { tokenId: 1, executedAt: new Date().getTime(), status: 'success' };
+  const { email, password } = req.body as SignInParams
+  //const data = { tokenId: 1, executedAt: new Date().getTime(), status: 'success' };
   try {
-    await userservice.createLoginAttempt(data);
-    return await userservice.login(email, password);
+    //await userservice.createLoginAttempt(data);
+    return(res.send(await userservice.login(email, password)));
   } catch (error) {}
 }
 

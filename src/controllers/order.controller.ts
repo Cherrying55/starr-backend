@@ -21,9 +21,9 @@ export async function getOrderItemsByOrderId(req: AuthenticatedRequest, res: Res
 
 export async function createOrder(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { orderId, quantity, productId } = req.body;
+  const {quantity, productId } = req.body;
   try {
-    const created = await orderservices.createOrderItem(userId, orderId, quantity, productId);
+    const created = await orderservices.createOrderItem(userId,quantity, productId);
     return res.send(created);
   } catch (error) {}
 }

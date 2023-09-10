@@ -2,10 +2,11 @@ import { Request, Response } from 'express';
 import { creditService } from '../services/creditcard.services';
 import { AuthenticatedRequest } from '../middlewares/authentication.middleware';
 
-export async function getCreditCardbyUserId(req: AuthenticatedRequest, res: Response) {
-  const { userId, creditId } = req;
+export async function getCreditCards(req: AuthenticatedRequest, res: Response) {
+  const { userId} = req;
+  const {password} = req.body;
   try {
-    const creditcard = await creditService.getCreditCardbyUserId(userId, creditId);
+    const creditcard = await creditService.getCreditCards(userId, password);
     return res.send(creditcard);
   } catch (error) {}
 }
@@ -14,7 +15,6 @@ export async function createCreditCard(req: AuthenticatedRequest, res: Response)
   const { userId } = req;
   const data = {
     PAN: req.body.PAN,
-    expirationdate: req.body.expirationdate,
     cardholdername: req.body.cardholdername,
     brand: req.body.brand,
     userId,
@@ -26,17 +26,26 @@ export async function createCreditCard(req: AuthenticatedRequest, res: Response)
 }
 
 export async function updateCreditCard(req: AuthenticatedRequest, res: Response) {
-  const { userId, creditId } = req;
+  const { userId} = req;
+  const {creditId} = req.params
+  const data = {
+    PAN: req.body.PAN,
+    cardholdername: req.body.cardholdername,
+    brand: req.body.brand,
+    userId,
+  };
   try {
-    const updated = await creditService.updateCreditCard(userId, req.body.password, creditId, req.body);
-    return res.send(updated);
+    const updated = await creditService.updateCreditCard(userId, req.body.password, Number(creditId), data);
+    return res.send(updated)
   } catch (e) {}
 }
 
 export async function deleteCreditCard(req: AuthenticatedRequest, res: Response) {
-  const { userId, creditId } = req;
+  const { userId} = req;
+  const {creditId} = req.params
+  const {password} = req.body
   try {
-    const deleted = await creditService.deleteCreditCard(userId, creditId);
+    const deleted = await creditService.deleteCreditCard(userId, Number(creditId), password);
     return res.send(deleted);
   } catch (e) {}
 }

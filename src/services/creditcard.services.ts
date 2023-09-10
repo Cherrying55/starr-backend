@@ -3,25 +3,22 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { userrepository } from '../repositories/user.repository';
 
-async function getCreditCardbyUserId(userId: number, creditId: number) {
-  const creditcard = await creditRepository.getCreditCardbyUserId(userId);
-  if (creditcard?.id !== creditId) {
+async function getCreditCards(userId: number, password: string) {
+  const user = await userrepository.getUserById(userId);
+  if(!user){
+    return "user not found"
+  }
+  const creditcards = await creditRepository.getCreditCards(userId);
+  if(!creditcards){
+    return "cards not found"
+  }
+  if(!bcrypt.compareSync(password, user.password)){
     let err = new Error();
     err.name = '403';
     err.message = '403';
-    if (creditcard) {
-      const token = await creditRepository.getTokenCreditByCreditId(creditcard.id);
-      if (token) {
-        const newuse = await creditRepository.createTokenCreditUse({
-          operationtype: 'getcredit',
-          tokenId: token.id,
-          status: 'forbbiden',
-        });
-      }
-    }
-    throw err;
+    return "unauthorized"
   }
-  return creditcard;
+  return creditcards;
 }
 
 async function createCreditCard(data: any) {
@@ -38,43 +35,50 @@ async function createCreditToken(creditId: number) {
 
 async function updateCreditCard(userId: number, password: string, creditId: number, data: any) {
   const hasuser = await userrepository.getUserById(userId);
+  console.log(userId)
+  console.log(creditId)
+  console.log(bcrypt.compareSync(password, hasuser.password))
   if (!hasuser) {
     let err = new Error();
     err.name = '403';
     err.message = '403';
+    return("user not found")
     throw err;
   } else {
-    if (!bcrypt.compareSync(hasuser.password, password)) {
+    if (!bcrypt.compareSync(password, hasuser.password)) {
       let err = new Error();
       err.name = '403';
       err.message = '403';
+      return("unauthorized")
       throw err;
     }
   }
+  console.log("arrived")
   return await creditRepository.updateCreditCard(creditId, data);
 }
 
-async function deleteCreditCard(userId: number, creditId: number) {
-  const hasuser = await userrepository.getUserById(userId);
-  if (!hasuser) {
-    let err = new Error();
-    err.name = '403';
-    err.message = '403';
-    throw err;
+async function deleteCreditCard(userId: number, creditId: number, password: string) {
+  const user = await userrepository.getUserById(userId);
+  if(!user){
+    return "user not found"
   }
-  const check = await creditRepository.getCreditCardbyUserId(hasuser.id);
-  if (check?.id !== creditId) {
+  const creditcards = await creditRepository.getCreditCards(userId);
+  if(!creditcards){
+    return "cards not found"
+  }
+  const check = await creditRepository.getCreditCardbyId(user.id, creditId);
+  if(!bcrypt.compareSync(password, user.password)){
     let err = new Error();
     err.name = '403';
     err.message = '403';
-    throw err;
+    return "unauthorized"
   }
   await creditRepository.deleteTokenCredit(creditId);
   return await creditRepository.deleteCreditCard(creditId);
 }
 
 export const creditService = {
-  getCreditCardbyUserId,
+  getCreditCards,
   createCreditCard,
   createCreditToken,
   updateCreditCard,

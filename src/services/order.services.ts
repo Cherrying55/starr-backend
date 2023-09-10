@@ -6,10 +6,14 @@ async function getOrdersByUserId(id: number) {
 
 async function getOrderItemsByOrderId(orderId: number, userId: number) {
   const order = await orderRepository.getOrderById(orderId);
-  if (order?.id !== userId) {
+  if(!order){
+    return "no order found"
+  }
+  if (order?.userId !== userId) {
     let err = new Error();
     err.name = '403';
     err.message = '403';
+    return "unauthorized"
     throw err;
   }
   return await orderRepository.getOrderItemsbyOrderId(orderId);
@@ -19,11 +23,11 @@ async function createOrder(userId: number) {
   return await orderRepository.createOrder(userId);
 }
 
-async function createOrderItem(userId: number, orderId: number, quantity: number, productId: number) {
+async function createOrderItem(userId: number, quantity: number, productId: number) {
   //createorder, check for userId before
-  const createorder = await createOrder(userId);
-  const status = createOrderStatus(orderId, 'open');
-  return await orderRepository.createOrderItem(orderId, quantity, productId);
+  const createorder =  await orderRepository.createOrder(userId);
+  const status = createOrderStatus(createorder.id, 'open');
+  return await orderRepository.createOrderItem(createorder.id, quantity, productId);
 }
 
 async function createOrderStatus(orderId: number, status: string) {
@@ -37,7 +41,6 @@ async function updateOrderStatus(orderId: number, status: string) {
 export const orderservices = {
   getOrderItemsByOrderId,
   getOrdersByUserId,
-  createOrder,
   createOrderItem,
   createOrderStatus,
   updateOrderStatus,

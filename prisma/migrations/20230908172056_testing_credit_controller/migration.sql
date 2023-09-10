@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "CreditCard" ALTER COLUMN "expirationdate" SET DEFAULT CURRENT_TIMESTAMP;

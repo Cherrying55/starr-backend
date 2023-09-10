@@ -50,6 +50,5 @@ function generateUnauthorizedResponse(res: Response) {
 export type AuthenticatedRequest = Request & JWTPayload
 
 type JWTPayload = {
-  userId: number;
-  creditId: number;
+  userId: number
 };

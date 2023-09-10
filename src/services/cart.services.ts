@@ -1,12 +1,15 @@
 import { cartRepository } from '../repositories/cart.repository';
 
 async function getCart(userId: number) {
-  return await cartRepository.getCart(userId);
+  const cart = await cartRepository.getCart(userId);
+  console.log(cart)
+  return cart;
 }
 
 async function getCartItemByProductId(userId: number, productId: number) {
   //check if product, if not then ''Product not Found 404''
   //check if user, if not then ''User not Found 404''
+  //check if already on cart
   return await cartRepository.getCartItemByProductId(userId, productId);
 }
 

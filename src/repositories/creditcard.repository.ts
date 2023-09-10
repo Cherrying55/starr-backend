@@ -2,12 +2,21 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-function getCreditCardbyUserId(userId: number) {
+function getCreditCardbyId(userId: number, id: number) {
   return prisma.creditCard.findFirst({
     where: {
       userId,
+      id
     },
   });
+}
+
+function getCreditCards(userId: number){
+  return prisma.creditCard.findMany({
+    where:{
+      userId
+    }
+  })
 }
 
 function createCreditCard(data: any) {
@@ -76,7 +85,8 @@ function getTokenCreditByCreditId(creditId: number) {
 }
 
 export const creditRepository = {
-  getCreditCardbyUserId,
+  getCreditCardbyId,
+  getCreditCards,
   createCreditCard,
   createCreditToken,
   createTokenCreditUse,

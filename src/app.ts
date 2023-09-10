@@ -41,11 +41,11 @@ app.use(cors())
 app.use(express.json())
 .get('/health', (_req, res) => res.send('OK!'))
 app.use('/cart', cartRouter)
-app.use(creditRouter)
-app.use(orderRouter)
+app.use("/credit", creditRouter)
+app.use("/orders", orderRouter)
 app.use("/products", productRouter)
 app.use('/auth', userRouter)
-app.use(wishListRouter)
+app.use("/wishlist", wishListRouter)
 
 export function init(): Promise<Express> {
     connectDb();
