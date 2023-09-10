@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
 import { orderservices } from '../services/order.services';
 import { AuthenticatedRequest } from '../middlewares/authentication.middleware';
+import { handleErrors } from '@/errors/handleerrors';
+import { ApplicationError } from '@/errors/protocol';
 
 export async function getOrdersByUserId(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   try {
     const orders = await orderservices.getOrdersByUserId(userId);
     return res.send(orders);
-  } catch (error) {}
+  } catch (error) {
+    return res.sendStatus(handleErrors(error as ApplicationError))
+  }
 }
 
 export async function getOrderItemsByOrderId(req: AuthenticatedRequest, res: Response) {
@@ -16,7 +20,9 @@ export async function getOrderItemsByOrderId(req: AuthenticatedRequest, res: Res
   try {
     const orderitems = await orderservices.getOrderItemsByOrderId(Number(id), userId);
     return res.send(orderitems);
-  } catch (error) {}
+  } catch (error) {
+    return res.sendStatus(handleErrors(error as ApplicationError))
+  }
 }
 
 export async function createOrder(req: AuthenticatedRequest, res: Response) {
@@ -25,5 +31,7 @@ export async function createOrder(req: AuthenticatedRequest, res: Response) {
   try {
     const created = await orderservices.createOrderItem(userId,quantity, productId);
     return res.send(created);
-  } catch (error) {}
+  } catch (error) {
+    return res.sendStatus(handleErrors(error as ApplicationError))
+  }
 }

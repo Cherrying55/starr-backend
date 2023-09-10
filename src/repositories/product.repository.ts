@@ -18,6 +18,13 @@ function getProductByCategoryId(categoryId: number) {
   });
 }
 
+function getProductById(id: number){
+  return prisma.product.findUnique({
+    where:{
+      id
+    }
+  })
+}
 function updateProductStock(productId: number, stock: number) {
   const updated = prisma.product.update({
     where: {
@@ -34,4 +41,5 @@ export const productrepository = {
   getAllProducts,
   getProductByCategoryId,
   updateProductStock,
+  getProductById
 };

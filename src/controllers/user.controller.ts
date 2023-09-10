@@ -3,6 +3,8 @@ import { creditService } from '../services/creditcard.services';
 import { userservice } from '../services/user.services';
 import { AuthenticatedRequest } from '../middlewares/authentication.middleware';
 import { createBillingAddressSchema } from '../schemas/createBillingAddress.schema';
+import { handleErrors } from '@/errors/handleerrors';
+import { ApplicationError } from '@/errors/protocol';
 
 export async function signUp(req: Request, res: Response) {
   //const { email, password } = req.body as SignInParams;
@@ -12,7 +14,9 @@ export async function signUp(req: Request, res: Response) {
   try {
     const newuser = await userservice.createUser(userdata);
     return res.send(newuser);
-  } catch (error) {}
+  } catch (error) {
+    return res.sendStatus(handleErrors(error as ApplicationError))
+  }
 }
 
 type SignInParams = {
@@ -26,7 +30,9 @@ export async function signIn(req: Request, res: Response) {
   try {
     //await userservice.createLoginAttempt(data);
     return(res.send(await userservice.login(email, password)));
-  } catch (error) {}
+  } catch (error) {
+    return res.sendStatus(handleErrors(error as ApplicationError))
+  }
 }
 
 export async function createBillingAddress(req: AuthenticatedRequest, res: Response) {
@@ -35,7 +41,9 @@ export async function createBillingAddress(req: AuthenticatedRequest, res: Respo
   try {
     const billingaddress = await userservice.createBillingAddress(data, userId);
     return res.send(billingaddress);
-  } catch (e) {}
+  } catch (e) {
+    return res.sendStatus(handleErrors(e as ApplicationError))
+  }
 }
 
 export async function getBillingAddress(req: AuthenticatedRequest, res: Response){
@@ -44,7 +52,7 @@ export async function getBillingAddress(req: AuthenticatedRequest, res: Response
     const billingaddress = await userservice.getBillingAddress(Number(req.params.id), userId)
     return res.send(billingaddress)
   } catch (error) {
-    
+    return res.sendStatus(handleErrors(error as ApplicationError))
   }
 }
 
@@ -54,7 +62,9 @@ export async function updateBillingAddress(req: AuthenticatedRequest, res: Respo
   try {
     const updated = await userservice.updateBillingAddress(userId, req.body, id);
     return res.send(updated);
-  } catch (e) {}
+  } catch (e) {
+    return res.sendStatus(handleErrors(e as ApplicationError))
+  }
 }
 
 export async function deleteBillingAddress(req: AuthenticatedRequest, res: Response) {
@@ -63,7 +73,9 @@ export async function deleteBillingAddress(req: AuthenticatedRequest, res: Respo
   try {
     const deleted = await userservice.deleteBillingAddress(userId, Number(id));
     return res.send(deleted);
-  } catch (e) {}
+  } catch (error) {
+    return res.sendStatus(handleErrors(error as ApplicationError))
+  }
 }
 
 export async function changePassword(req: AuthenticatedRequest, res: Response) {
@@ -72,5 +84,7 @@ export async function changePassword(req: AuthenticatedRequest, res: Response) {
   try {
     const changed = await userservice.updatePassword(userId, password, newpassword);
     return res.sendStatus(200);
-  } catch (error) {}
+  } catch (error) {
+    return res.sendStatus(handleErrors(error as ApplicationError))
+  }
 }

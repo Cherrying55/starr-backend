@@ -1,3 +1,4 @@
+import { notfoundError } from '@/errors/notfound.error';
 import { productrepository } from '../repositories/product.repository';
 
 async function getAllProducts() {
@@ -9,6 +10,8 @@ async function getProductByCategoryId(categoryId: number) {
 }
 
 async function updateProductStock(productId: number, stock: number) {
+  const product = await productrepository.getProductById(productId)
+  if(!product) throw notfoundError("Product")
   const updated = await productrepository.updateProductStock(productId, stock);
   return updated;
 }
