@@ -51,13 +51,13 @@ async function createLoginAttempt(data: any) {
   return loginattempt;
 }
 
-async function createBillingAddress(data: createBillingAddressSchema, userId: number) {
+async function createBillingAddress(data: Omit<createBillingAddressSchema, "userId">, userId: number) {
   const hasuser = await userrepository.getUserById(userId);
   if (!hasuser) {
     throw notfoundError('User');
   }
-  data.userId = userId;
-  const billingaddress = await userrepository.createBillingAddress(data);
+  const createdata = {...data, userId}
+  const billingaddress = await userrepository.createBillingAddress(createdata);
   return billingaddress;
 }
 

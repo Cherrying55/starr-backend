@@ -33,7 +33,7 @@ export async function signIn(req: Request, res: Response) {
 
 export async function createBillingAddress(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const data = req.body as createBillingAddressSchema;
+  const data = req.body as Omit<createBillingAddressSchema, "userId">;
   try {
     const billingaddress = await userservice.createBillingAddress(data, userId);
     return res.send(billingaddress);
