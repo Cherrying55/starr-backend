@@ -13,7 +13,6 @@ export async function createUser(): Promise<User> {
 
   return prisma.user.create({
     data: {
-      id: 1,
       email: faker.internet.email(),
       password: hashedPassword,
       name: faker.person.fullName()

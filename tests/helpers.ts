@@ -10,7 +10,7 @@ const table = ['User', 'RetiredPassword', 'BillingAddress', 'UserSession', 'Logi
 export async function cleanDb(){
     try {
         for(const name of table){
-            await prisma.$queryRaw`DELETE FROM "${name}";`;
+            await prisma.$queryRaw`DELETE FROM ${name}`;
         }
         
     } catch (error) {
