@@ -20,6 +20,27 @@ export async function createUser(): Promise<User> {
   });
 }
 
+export async function createUserandReturnUnhashed(){
+  const incomingPassword = faker.internet.password(6);
+  const hashedPassword = await bcrypt.hash(incomingPassword, 10);
+
+  const user = await prisma.user.create({
+    data: {
+      email: faker.internet.email(),
+      password: hashedPassword,
+      name: faker.person.fullName()
+    },
+  });
+
+  return({
+    email: user.email,
+    password: incomingPassword.toString(),
+    id: user.id,
+    name: user.name,
+
+  } as User)
+}
+
 export async function createUserSession(token: string, user: User): Promise<UserSession>{
   return prisma.userSession.create({
     data: {
