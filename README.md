@@ -56,3 +56,8 @@
     <li>Run npm run dev on the bash</li>
   </ul>
 </h4>
+<h2>Coming soon</h2>
+<ul>
+  <li>Redis</li>
+  <li>Docker</li>
+</ul>
