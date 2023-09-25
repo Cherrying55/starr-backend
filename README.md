@@ -1,6 +1,6 @@
 
-<h1>Fully functional clothing store server application with a shopping bag, a wishing list and account information.</h1>
-
+## Fully functional clothing store server application with a shopping bag, a wishing list and account information.
+<img src="https://i.imgur.com/96Ol0DB.png" />
 <hr>
 <h2>Features</h2>
 <h3>Accounts</h3>
@@ -52,6 +52,7 @@
 <h2>Instructions</h2>
 <h4>
   <ul>
-    <li>Execute npm run dev on the bash</li>
+    <li>Install all dependencies using npm install</li>
+    <li>Run npm run dev on the bash</li>
   </ul>
 </h4>
