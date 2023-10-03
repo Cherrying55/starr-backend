@@ -92,6 +92,15 @@ function getBillingAdressbyId(userId: number, id: number) {
   return billingaddress;
 }
 
+function getBillingAddresses(userId: number){
+  const billingaddresses = prisma.billingAddress.findMany({
+    where:{
+      userId
+    }
+  })
+  return billingaddresses
+}
+
 function deleteBillingAddress(userId: number, id: number) {
   const deleted = prisma.billingAddress.deleteMany({
     where: {
@@ -123,4 +132,5 @@ export const userrepository = {
   getUserById,
   getBillingAdressbyId,
   getUserSessionByUserId,
+  getBillingAddresses
 };

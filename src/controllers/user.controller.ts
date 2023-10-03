@@ -45,7 +45,7 @@ export async function createBillingAddress(req: AuthenticatedRequest, res: Respo
 export async function getBillingAddress(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   try {
-    const billingaddress = await userservice.getBillingAddress(Number(req.params.id), userId);
+    const billingaddress = await userservice.getBillingAddress(userId);
     return res.send(billingaddress);
   } catch (error) {
     return res.sendStatus(handleErrors(error as ApplicationError));
@@ -54,9 +54,9 @@ export async function getBillingAddress(req: AuthenticatedRequest, res: Response
 
 export async function updateBillingAddress(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const { id, country, state, city, zipcode, street, number, complemento } = req.body;
+  const { id} = req.params
   try {
-    const updated = await userservice.updateBillingAddress(userId, req.body, id);
+    const updated = await userservice.updateBillingAddress(userId, req.body, Number(id));
     return res.send(updated);
   } catch (e) {
     return res.sendStatus(handleErrors(e as ApplicationError));

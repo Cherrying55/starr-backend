@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import { conflictError } from '@/errors/conflict.error';
 import { notfoundError } from '@/errors/notfound.error';
 import { unauthorizedError } from '@/errors/unauthorized.error';
+import { CreateBilling } from '@/schemas/createbilling.schema';
 type CreateUserParams = Pick<User, 'email' | 'password' | 'birthDate'>;
 
 async function createUser(data: any) {
@@ -52,7 +53,7 @@ async function createLoginAttempt(data: any) {
   return loginattempt;
 }
 
-async function createBillingAddress(data: Omit<createBillingAddressSchema, "userId">, userId: number) {
+async function createBillingAddress(data: CreateBilling, userId: number) {
   const hasuser = await userrepository.getUserById(userId);
   if (!hasuser) {
     throw notfoundError('User');
@@ -67,7 +68,7 @@ async function updatePassword(userId: number, password: string, newpassword: str
   if (!hasuser) {
     throw notfoundError('User');
   } else {
-    if (!bcrypt.compareSync(hasuser.password, password)) {
+    if (!bcrypt.compareSync(password, hasuser.password)) {
       throw unauthorizedError();
     }
     const retiredpassword = await userrepository.createRetiredPassword({ userId, password });
@@ -103,12 +104,12 @@ async function deleteBillingAddress(userId: number, id: number) {
   return deletebillingaddress;
 }
 
-async function getBillingAddress(id: number, userId: number) {
+async function getBillingAddress(userId: number) {
   const hasuser = await userrepository.getUserById(userId);
   if (!hasuser) {
     throw notfoundError('User');
   }
-  return await userrepository.getBillingAdressbyId(userId, id);
+  return await userrepository.getBillingAddresses(userId)
 }
 export const userservice = {
   createUser,

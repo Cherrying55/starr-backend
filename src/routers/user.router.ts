@@ -11,7 +11,7 @@ import { updateBillingSchema } from '@/schemas/updatebilling.schema';
 const userRouter = Router();
 userRouter.post('/sign-up', validateSchemaMiddleware(signUpSchema), usercontroller.signUp);
 userRouter.post('/sign-in', validateSchemaMiddleware(signInSchema), usercontroller.signIn);
-userRouter.get('/billing/:id', authenticateToken, usercontroller.getBillingAddress);
+userRouter.get('/billing', authenticateToken, usercontroller.getBillingAddress);
 userRouter.post(
   '/billing',
   authenticateToken,
