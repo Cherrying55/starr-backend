@@ -32,7 +32,8 @@ async function login(email: string, password: string) {
       }
       throw unauthorizedError();
     }
-    return createSession(hasuser.id);
+    const token = await createSession(hasuser.id);
+    return {name: hasuser.name, email:hasuser.email, birthday: hasuser.birthDate, token}
   }
 }
 
