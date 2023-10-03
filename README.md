@@ -2,6 +2,8 @@
 ## Fully functional clothing store server application with a shopping bag, a wishing list and account information.
 <img src="https://i.imgur.com/96Ol0DB.png" />
 <hr>
+Front-end: https://github.com/GustavoFLacerda/starr-frontend
+<hr>
 <h2>Features</h2>
 <h3>Accounts</h3>
 <ul>
